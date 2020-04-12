@@ -1,5 +1,4 @@
 import auth.SongkickApiAuthenticator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mikael.urlbuilder.UrlBuilder;
 
 import java.io.IOException;
@@ -14,12 +13,13 @@ public class LocalArtistsFinder {
     private static final String LOCATION_SEARCH_PATH = "api/3.0/search/locations.json";
     private static final String AREA_QUERY_PARAM = "query";
     private static final String API_KEY_QUERY_PARAM = "apikey";
+    private static final String PROTOCOL = "https";
 
     public String findUpcomingConcertsIn(String area) throws IOException, InterruptedException {
         HttpClient httpClient = HttpClient.newHttpClient();
 
         URI uri = UrlBuilder.empty()
-                .withScheme("https")
+                .withScheme(PROTOCOL)
                 .withHost(SONGKICK_HOST)
                 .withPath(LOCATION_SEARCH_PATH)
                 .addParameter(AREA_QUERY_PARAM, area)
@@ -35,6 +35,9 @@ public class LocalArtistsFinder {
 
         String response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
 
-        return response;
+        JsonParser parser = new JsonParser();
+        var parsedJson = parser.parse(response);
+
+        return parsedJson.toString();
     }
 }
