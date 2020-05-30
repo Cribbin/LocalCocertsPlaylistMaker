@@ -13,6 +13,10 @@ public class SongkickApiAuthenticator {
         File apiKeyfile = new File(API_KEY_FILEPATH);
         Scanner scanner = new Scanner(apiKeyfile);
 
+        if (!scanner.hasNextLine()) {
+            throw new FileNotFoundException("Songkick API Key file not found in " + API_KEY_FILEPATH);
+        }
+
         return scanner.nextLine();
     }
 }
