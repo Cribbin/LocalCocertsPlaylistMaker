@@ -1,4 +1,4 @@
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class Event {
     private final String artist;
@@ -20,5 +20,18 @@ public class Event {
             return -1;
         }
         return 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return artist.equals(event.artist);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(artist);
     }
 }

@@ -63,7 +63,7 @@ public class LocalArtistsFinder {
 
     public List<Event> getMetroAreaCalendarFor(String metroAreaId) throws IOException, InterruptedException {
         int page = 1;
-        List<Event> output = new ArrayList<>();
+        Set<Event> output = new LinkedHashSet<>();
         List<Event> pageOfOutput = getMetroAreaCalendarFor(metroAreaId, page);
 
         while (!pageOfOutput.isEmpty()) {
