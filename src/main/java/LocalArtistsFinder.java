@@ -20,9 +20,13 @@ public class LocalArtistsFinder {
     private static final String API_KEY_QUERY_PARAM = "apikey";
     private static final String PROTOCOL = "https";
 
-    public Optional<String> getMetroAreaIdFor(String area) throws IOException, InterruptedException {
-        HttpClient httpClient = HttpClient.newHttpClient();
+    private HttpClient httpClient;
 
+    public LocalArtistsFinder() {
+        this.httpClient = HttpClient.newHttpClient();
+    }
+
+    public Optional<String> getMetroAreaIdFor(String area) throws IOException, InterruptedException {
         URI uri = UrlBuilder.empty()
                 .withScheme(PROTOCOL)
                 .withHost(SONGKICK_HOST)
@@ -58,8 +62,19 @@ public class LocalArtistsFinder {
     }
 
     public List<Event> getMetroAreaCalendarFor(String metroAreaId) throws IOException, InterruptedException {
-        HttpClient httpClient = HttpClient.newHttpClient();
+        int page = 1;
+        List<Event> output = new ArrayList<>();
+        List<Event> pageOfOutput = getMetroAreaCalendarFor(metroAreaId, page);
 
+        while (!pageOfOutput.isEmpty()) {
+            output.addAll(pageOfOutput);
+            pageOfOutput = getMetroAreaCalendarFor(metroAreaId, ++page);
+        }
+
+        return output.stream().sorted(Event::compareByPopularity).collect(Collectors.toList());
+    }
+
+    public List<Event> getMetroAreaCalendarFor(String metroAreaId, int page) throws IOException, InterruptedException {
         URI uri = UrlBuilder.empty()
                 .withScheme(PROTOCOL)
                 .withHost(SONGKICK_HOST)
@@ -67,6 +82,8 @@ public class LocalArtistsFinder {
                 .addParameter(API_KEY_QUERY_PARAM, SongkickApiAuthenticator.getApiKey())
                 .addParameter("min_date", getTodaysDate())
                 .addParameter("max_date", getNMonthsFromNow(1))
+                .addParameter("page", String.valueOf(page))
+                .addParameter("per_page", "50")
                 .toUri();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -83,11 +100,17 @@ public class LocalArtistsFinder {
 
         var resultsPage = (LinkedHashMap) parsedJson.get("resultsPage");
         var results = (LinkedHashMap) resultsPage.get("results");
+
+        if (results.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         var events = (ArrayList) results.get("event");
 
         return (List<Event>) events
                 .stream()
                 .map(eventHashMap -> makeEvent((LinkedHashMap) eventHashMap))
+                .filter(event -> event != null)
                 .collect(Collectors.toList());
     }
 
@@ -110,6 +133,11 @@ public class LocalArtistsFinder {
 
     private static Event makeEvent(LinkedHashMap<String, Object> eventMap) {
         var performance = (ArrayList) eventMap.get("performance");
+
+        if (performance.isEmpty()) {
+            return null;
+        }
+
         var artist = (String) ((LinkedHashMap) performance.get(0)).get("displayName");
         var popularity = (Double) eventMap.get("popularity");
 

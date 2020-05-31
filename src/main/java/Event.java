@@ -1,3 +1,5 @@
+import java.util.stream.Collectors;
+
 public class Event {
     private final String artist;
     private final double popularity;
@@ -9,5 +11,14 @@ public class Event {
 
     public double getPopularity() {
         return popularity;
+    }
+
+    public int compareByPopularity(Event other) {
+        if (this.getPopularity() == other.getPopularity()) {
+            return 0;
+        } else if (this.getPopularity() < other.getPopularity()) {
+            return -1;
+        }
+        return 1;
     }
 }
