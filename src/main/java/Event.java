@@ -9,6 +9,10 @@ public class Event {
         this.popularity = popularity;
     }
 
+    public String getArtist() {
+        return artist;
+    }
+
     public double getPopularity() {
         return popularity;
     }
