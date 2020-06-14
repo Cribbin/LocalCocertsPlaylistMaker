@@ -9,7 +9,7 @@ public class SpotifyReaderTest {
     @Test
     public void searchArtists() throws IOException, InterruptedException {
         SpotifyReader reader = new SpotifyReader();
-        List<ArtistDetail> response = reader.searchArtists(List.of("Kendrick Lamar", "Kings of Leon"), KEY);
+//        List<ArtistDetail> response = reader.searchArtists(List.of("Kendrick Lamar", "Kings of Leon"), KEY);
     }
 
     @Test
@@ -19,6 +19,6 @@ public class SpotifyReaderTest {
 
         SpotifyReader reader = new SpotifyReader();
 
-        List<SongDetail> response = reader.getTopSongForArtists(List.of(artist1, artist2), KEY);
+ //       List<SongDetail> response = reader.getTopSongForArtists(List.of(artist1, artist2), KEY);
     }
 }

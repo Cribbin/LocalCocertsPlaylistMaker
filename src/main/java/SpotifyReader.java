@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SpotifyReader {
+    /*
     private static final String PROTOCOL = "https";
     private static final String SPOTIFY_HOST = "api.spotify.com";
     private static final String SEARCH_PATH = "v1/search";
@@ -110,4 +111,6 @@ public class SpotifyReader {
 
         return songs;
     }
+
+     */
 }
