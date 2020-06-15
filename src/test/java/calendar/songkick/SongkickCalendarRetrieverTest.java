@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,10 +31,13 @@ class SongkickCalendarRetrieverTest {
     @Mock
     private HttpClient<SongkickCalendarSearchResponse> httpClient;
 
+    @Mock
+    private Properties properties;
+
     @BeforeEach
     void setUp() {
         initMocks(this);
-        songkickCalendarRetriever = new SongkickCalendarRetriever(httpClient);
+        songkickCalendarRetriever = new SongkickCalendarRetriever(httpClient, properties);
     }
 
     @Test

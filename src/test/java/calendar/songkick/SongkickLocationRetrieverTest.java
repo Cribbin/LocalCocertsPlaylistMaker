@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.Optional;
+import java.util.Properties;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -29,10 +30,13 @@ class SongkickLocationRetrieverTest {
     @Mock
     private HttpClient<SongkickLocationSearchResponse> httpClient;
 
+    @Mock
+    private Properties properties;
+
     @BeforeEach
     void setUp() {
         initMocks(this);
-        songkickLocationRetriever = new SongkickLocationRetriever(httpClient);
+        songkickLocationRetriever = new SongkickLocationRetriever(httpClient, properties);
     }
 
     @Test

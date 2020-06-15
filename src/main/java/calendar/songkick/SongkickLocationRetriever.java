@@ -1,37 +1,37 @@
 package calendar.songkick;
 
-import auth.SongkickApiAuthenticator;
 import http.HttpClient;
 
-import java.io.FileNotFoundException;
 import java.util.Optional;
+import java.util.Properties;
+
+import static calendar.songkick.SongkickLocationSearchResponse.Location;
 
 public class SongkickLocationRetriever {
     private static final String LOCATION_SEARCH_URL = "http://api.songkick.com/api/3.0/search/locations.json?query=%s&apikey=%s";
 
     private final HttpClient<SongkickLocationSearchResponse> httpClient;
+    private final String songkickApiKey;
 
-    public SongkickLocationRetriever(HttpClient<SongkickLocationSearchResponse> httpClient) {
+    public SongkickLocationRetriever(HttpClient<SongkickLocationSearchResponse> httpClient, Properties properties) {
         this.httpClient = httpClient;
+        this.songkickApiKey = properties.getProperty("songkick-api-key");
+
+        if (songkickApiKey.isEmpty()) {
+            throw new IllegalArgumentException("songkick-api-key not found");
+        }
     }
 
     public Optional<String> getMetroAreaIdFor(String area) {
-        String filledUrl;
+        String url = String.format(LOCATION_SEARCH_URL, area, songkickApiKey);
 
-        try {
-            filledUrl = String.format(LOCATION_SEARCH_URL, area, SongkickApiAuthenticator.getApiKey());
-        } catch (FileNotFoundException e) {
-            // TODO Add error handling
-            return Optional.empty();
-        }
-
-        Optional<SongkickLocationSearchResponse> response = httpClient.get(filledUrl, SongkickLocationSearchResponse.class);
+        Optional<SongkickLocationSearchResponse> response = httpClient.get(url, SongkickLocationSearchResponse.class);
 
         if (response.isEmpty()) {
             return Optional.empty();
         }
 
-        SongkickLocationSearchResponse.Location[] locations = response.get().getResultsPage().getResults().getLocation();
+        Location[] locations = response.get().getResultsPage().getResults().getLocation();
 
         if (locations == null || locations.length == 0) {
             return Optional.empty();
