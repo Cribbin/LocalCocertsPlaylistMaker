@@ -1,6 +1,4 @@
 .idea
 target
 *.iml
-src/main/resources/songkick_api.key.txt
-src/main/resources/spotify_client_id.txt
-src/main/resources/spotify_client_secret.txt
+src/main/resources/config.properties
