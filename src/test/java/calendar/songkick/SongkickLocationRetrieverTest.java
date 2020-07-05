@@ -36,6 +36,7 @@ class SongkickLocationRetrieverTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
+        when(properties.getProperty("songkick-api-key")).thenReturn("any-key");
         songkickLocationRetriever = new SongkickLocationRetriever(httpClient, properties);
     }
 

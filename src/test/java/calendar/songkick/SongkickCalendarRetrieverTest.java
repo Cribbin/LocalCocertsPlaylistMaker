@@ -37,6 +37,7 @@ class SongkickCalendarRetrieverTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
+        when(properties.getProperty("songkick-api-key")).thenReturn("any-key");
         songkickCalendarRetriever = new SongkickCalendarRetriever(httpClient, properties);
     }
 
